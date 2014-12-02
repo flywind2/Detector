@@ -11,4 +11,5 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile 'org.apache.derby:derby:10.11.1.1'
     compile 'com.google.guava:guava:18.0'
+    compile 'org.slf4j:slf4j-api:1.7.7'
 }
