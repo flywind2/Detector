@@ -12,4 +12,5 @@ dependencies {
     compile 'org.apache.derby:derby:10.11.1.1'
     compile 'com.google.guava:guava:18.0'
     compile 'org.slf4j:slf4j-api:1.7.7'
+    compile 'org.apache.sanselan:sanselan:0.97-incubator'
 }
