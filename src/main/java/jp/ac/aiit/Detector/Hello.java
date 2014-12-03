@@ -2,10 +2,7 @@ package jp.ac.aiit.Detector;
 
 import jp.ac.aiit.Detector.util.Debug;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * テスト用クラス。いずれ消す
@@ -22,6 +19,8 @@ public class Hello {
         m.put("1", "test1");
         m.put("2", "test2");
         Debug.debug("test;", m);
+        Calendar cal = Calendar.getInstance();
+        Debug.debug("test;" , cal);
     }
 
     public int plus(int arg) {
