@@ -1,7 +1,30 @@
+import org.apache.tools.ant.taskdefs.condition.Os;
+
 apply plugin: 'java'
 
 sourceCompatibility = 1.7
 version = '1.0'
+
+ext {
+
+    if (Os.isFamily(Os.FAMILY_UNIX)) {
+        os = 'linux'
+    }
+    if (Os.isFamily(Os.FAMILY_MAC)) {
+        os = 'macosx'
+    }
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        os = 'windows'
+    }
+    arch = System.getProperty("os.arch");
+
+    if(arch == 'amd64'){
+        arch = 'x86_64'
+    }
+    opencvBinaryClassifer = os+'-'+arch;
+
+}
+
 
 repositories {
     mavenCentral()
@@ -13,4 +36,6 @@ dependencies {
     compile 'com.google.guava:guava:18.0'
     compile 'org.slf4j:slf4j-api:1.7.7'
     compile 'org.apache.sanselan:sanselan:0.97-incubator'
+    compile group: 'org.bytedeco.javacpp-presets', name: 'opencv', version: '2.4.9-0.9', classifier: opencvBinaryClassifer
+    compile 'org.bytedeco.javacpp-presets:opencv:2.4.9-0.9'
 }
