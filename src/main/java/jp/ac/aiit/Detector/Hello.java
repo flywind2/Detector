@@ -2,8 +2,10 @@ package jp.ac.aiit.Detector;
 
 import jp.ac.aiit.Detector.util.Debug;
 
+import java.io.File;
 import java.util.*;
 
+import jp.ac.aiit.Detector.util.Tool;
 import org.bytedeco.javacpp.*;
 
 import static org.bytedeco.javacpp.opencv_core.*;
@@ -29,8 +31,8 @@ public class Hello {
         Debug.debug("test;" , cal);
 
         opencv_objdetect.CascadeClassifier faceDetector
-                = new opencv_objdetect.CascadeClassifier(Hello.class.getResource("/lbpcascade_frontalface.xml").getPath().substring(1));
-        Mat image = imread(Hello.class.getResource("/lena.png").getPath().substring(1));
+                = new opencv_objdetect.CascadeClassifier(Tool.getResourcePath(Hello.class, "/lbpcascade_frontalface.xml"));
+        Mat image = imread(Tool.getResourcePath(Hello.class, "/lena.png"));
 
         Rect faceDetections = new Rect();
         faceDetector.detectMultiScale(image, faceDetections);
