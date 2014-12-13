@@ -45,8 +45,4 @@ public class Hello {
         System.out.println(String.format("Writing %s", filename));
         imwrite(filename, image);
     }
-
-    public int plus(int arg) {
-        return arg + 5;
-    }
 }

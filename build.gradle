@@ -4,6 +4,7 @@ apply plugin: 'java'
 
 sourceCompatibility = 1.7
 version = '1.0'
+def flgMacOs64 = false
 
 ext {
 
@@ -21,6 +22,11 @@ ext {
     if(arch == 'amd64'){
         arch = 'x86_64'
     }
+
+    if (os == 'macosx' && arch == 'x86_64') {
+        flgMacOs64 = true
+    }
+
     opencvBinaryClassifer = os+'-'+arch;
 
 }
@@ -36,6 +42,12 @@ dependencies {
     compile 'com.google.guava:guava:18.0'
     compile 'org.slf4j:slf4j-api:1.7.7'
     compile 'org.apache.sanselan:sanselan:0.97-incubator'
-    compile group: 'org.bytedeco.javacpp-presets', name: 'opencv', version: '2.4.9-0.9', classifier: opencvBinaryClassifer
     compile 'org.bytedeco.javacpp-presets:opencv:2.4.9-0.9'
+    if (flgMacOs64) {
+        // Mac OS Only
+        // 2.4.9-0.9_macox_x64が壊れているため、暫定的にlibのjarを利用する
+        compile files('lib/opencv-2.4.10-0.9.1-20141109.113201-4-macosx-x86_64.jar')
+    } else {
+        compile group: 'org.bytedeco.javacpp-presets', name: 'opencv', version: '2.4.9-0.9', classifier: opencvBinaryClassifer
+    }
 }
