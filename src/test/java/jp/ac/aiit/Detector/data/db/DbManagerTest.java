@@ -4,6 +4,8 @@ import junit.framework.TestCase;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DbManagerTest extends TestCase {
 
@@ -25,5 +27,16 @@ public class DbManagerTest extends TestCase {
             assert false;
         }
         assert true;
+    }
+
+
+    public void testConcatWithCommas() throws Exception {
+        List<String> ls = new ArrayList<String>();
+        ls.add("test");
+        ls.add("test1");
+        ls.add("test2");
+        String ret = DbManager.concatWithCommas(ls);
+
+        assertEquals("test,test1,test2", ret);
     }
 }
