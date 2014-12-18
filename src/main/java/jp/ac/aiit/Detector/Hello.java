@@ -11,7 +11,6 @@ import org.bytedeco.javacpp.*;
 import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_highgui.*;
 
-
 /**
  * テスト用クラス。いずれ消す
  */
@@ -32,8 +31,13 @@ public class Hello {
 
         opencv_objdetect.CascadeClassifier faceDetector
                 = new opencv_objdetect.CascadeClassifier(Tool.getResourcePath(Hello.class, "/lbpcascade_frontalface.xml"));
-        Mat image = imread(Tool.getResourcePath(Hello.class, "/lena.png"));
 
+        Mat image = imread(Tool.getResourcePath(Hello.class, "/lena.png"));
+        IplImage im = cvLoadImage(Tool.getResourcePath(Hello.class, "/lena.png"));
+
+        System.out.println((int)(image.data().get((int)(0*image.cols()+0*image.step()+2)) & 0xFF));
+        System.out.println((int)(image.ptr(0,0).get(2) & 0xFF));
+        System.out.println(image.asCvMat().rows(1).cols(1));
         Rect faceDetections = new Rect();
         faceDetector.detectMultiScale(image, faceDetections);
 
@@ -44,5 +48,9 @@ public class Hello {
         String filename = "build/faceDetection.png";
         System.out.println(String.format("Writing %s", filename));
         imwrite(filename, image);
+
+        //System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        //Mat image = Highgui.imread(Tool.getResourcePath(Hello.class, "/lena.png"));
+
     }
 }
