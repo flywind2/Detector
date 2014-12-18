@@ -17,7 +17,6 @@ public class Tool {
      * @return
      */
     public static String getResourcePath(Class c, String s) {
-
         if (c.getResource(s) == null) {
             return null;
         }
