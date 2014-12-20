@@ -21,13 +21,13 @@ public class Hello {
 		Histogram hst = new Histogram();
 		List<String> images = new ArrayList<String>();
 		String path = System.getProperty("user.dir");
-		for (int i = 0; i < 50; i++) {
-			int j = (i % 11) + 1;
+		for (int i = 0; i < 500; i++) {
+			int j = (i % 13) + 1;
 			images.add(path + "/src/main/resources/pic"+ j +".jpg");
 		}
 		hst.setImages(images);
 		long start = System.currentTimeMillis();
-		List<CvHistogram> histograms = hst.createGrayScaleHistogram();
+		List<CvHistogram> histograms = hst.createColorHistogram();
 		hst.execute(histograms);
 		long stop = System.currentTimeMillis();
 		System.out.println("実行にかかった時間は " + (stop - start) + " ミリ秒です。");
