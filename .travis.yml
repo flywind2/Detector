@@ -3,16 +3,14 @@ jdk:
   - oraclejdk7
   - oraclejdk8
 
-env:
-  global:
-    - GRADLE_OPTS="-Djava.io.tmpdir=$TRAVIS_BUILD_DIR/tmp"
+#env:
+#  global:
 
 before_install:
+  # OpenCVライブラリ呼び出しに必要なライブラリ
+  # 利用状況によって増減する可能性があるので注意する事
   - "sudo apt-get install libv4l-dev"
-  - "echo $TRAVIS_BUILD_DIR"
-  - "mkdir tmp"
-  - "ls -ltr lib/"
 
 after_failure:
-  - "cat $TRAVIS_BUILD_DIR/log.log"
   - ./gradlew test --info
+#  - "cat $TRAVIS_BUILD_DIR/log.log"
