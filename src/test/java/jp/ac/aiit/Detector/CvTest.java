@@ -12,6 +12,7 @@ public class CvTest {
 
     @Test
     public void testCvLib() {
+        System.out.println("test:");
         System.getProperties().list(System.out);
         Mat image = imread(Tool.getResourcePath(this.getClass(), "/lena.png"));
     }
