@@ -13,3 +13,4 @@ before_install:
 
 after_failure:
   - "cat $TRAVIS_BUILD_DIR/log.log"
+  - ./gradlew test --info
