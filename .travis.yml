@@ -8,6 +8,7 @@ env:
     - GRADLE_OPTS="-Djava.io.tmpdir=$TRAVIS_BUILD_DIR/tmp"
 
 before_install:
+  - "sudo apt-get install libv4l-dev"
   - "echo $TRAVIS_BUILD_DIR"
   - "mkdir tmp"
   - "ls -ltr lib/"
