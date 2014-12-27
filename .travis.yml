@@ -3,11 +3,13 @@ jdk:
   - oraclejdk7
   - oraclejdk8
 
+env:
+  global:
+    - GRADLE_OPTS="-Djava.io.tmpdir=$TRAVIS_BUILD_DIR/tmp"
+
 before_script:
   - "echo $TRAVIS_BUILD_DIR"
   - "mkdir tmp"
-  - "df -h"
-
 
 after_failure:
   - "cat $TRAVIS_BUILD_DIR/log.log"
