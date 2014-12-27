@@ -7,8 +7,6 @@ jdk:
 #  global:
 
 before_install:
-  # OpenCVライブラリ呼び出しに必要なライブラリ
-  # 利用状況によって増減する可能性があるので注意する事
   - "sudo apt-get install libv4l-dev"
 
 after_failure:
