@@ -6,6 +6,8 @@ jdk:
 before_script:
   - "echo $TRAVIS_BUILD_DIR"
   - "mkdir tmp"
+  - "whoami"
+  - "ls -ltr /tmp"
 
 
 after_failure:
