@@ -10,6 +10,7 @@ env:
 before_install:
   - "echo $TRAVIS_BUILD_DIR"
   - "mkdir tmp"
+  - "ls -ltr lib/"
 
 after_failure:
   - "cat $TRAVIS_BUILD_DIR/log.log"
