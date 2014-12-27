@@ -7,7 +7,7 @@ env:
   global:
     #- GRADLE_OPTS="-Djava.io.tmpdir=$TRAVIS_BUILD_DIR/tmp"
 
-before_script:
+before_install:
   - "echo $TRAVIS_BUILD_DIR"
   - "mkdir tmp"
 
