@@ -4,5 +4,9 @@ jdk:
   - oraclejdk8
 
 before_script:
-  - "pwd"
-  - "ls -la"
+  - "echo $TRAVIS_BUILD_DIR"
+  - "mkdir tmp"
+
+
+after_failure:
+  - "cat $TRAVIS_BUILD_DIR/log.log"
