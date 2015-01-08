@@ -13,7 +13,32 @@ import static org.bytedeco.javacpp.opencv_imgproc.*;
  */
 public class Histogram {
 
+	/**
+	 *
+	 */
+	private final static double MATCH_REVERSE_RATE = 0.17;
+
+	/**
+	 *
+	 */
+	private final static double MATCH_RATE         = 0.83;
+
+	/**
+	 *
+	 */
 	private List<String> images;
+
+	private Map<Integer, Double> matchRateList;
+
+	/**
+	 *
+	 */
+	public void Histogram()
+	{
+		matchRateList = new HashMap<Integer, Double>();
+		matchRateList.put(CV_COMP_INTERSECT, MATCH_RATE);
+		matchRateList.put(CV_COMP_HELLINGER, MATCH_REVERSE_RATE);
+	}
 
 	/**
 	 * 画像(path)をセットする.
@@ -46,15 +71,16 @@ public class Histogram {
 	}
 
 	/**
-	 *
-	 * @return
+	 * 取り込まれたimagesの画像データから
+	 * RGBのヒストグラムを生成する.
+	 * @return List<CvHistogram>
 	 */
 	public List<CvHistogram> createColorHistogram() {
 		List<CvHistogram> hists = new ArrayList<CvHistogram>();
 		for (int i = 0; i < images.size(); i++) {
 			IplImage img = cvLoadImage(images.get(i), CV_LOAD_IMAGE_COLOR);
 			List<IplImage> dst = new ArrayList<IplImage>();
-			for (int k = 0; k < img.nChannels(); k++) {
+			for (int j = 0; j < img.nChannels(); j++) {
 				dst.add(cvCreateImage(cvSize(img.width(), img.height()), img.depth(), 1));
 			}
 			FloatPointer ranges = new FloatPointer(0.0f, 256.0f);
@@ -74,23 +100,31 @@ public class Histogram {
 	 * マッチパターンを決めて、ヒストグラムの比較を行う。
 	 * @param hist1
 	 * @param hist2
-	 * @param matchPermit
-	 * @param matchType
-	 * @return
+	 * @param cvComp
+	 * @return boolean
 	 */
-	private boolean matchPattern(CvHistogram hist1, CvHistogram hist2, double matchPermit, int matchType) {
-		double rate = cvCompareHist(hist1, hist2, matchType);
-		if (matchType == CV_COMP_INTERSECT) {
-			return rate < matchPermit;
-		} else if (matchType == CV_COMP_CHISQR) {
-			return rate < matchPermit;
-		} else if (matchType == CV_COMP_BHATTACHARYYA) {
-			return rate < matchPermit;
-		} else if (matchType == CV_COMP_HELLINGER) {
-			return rate < matchPermit;
+	private boolean allowableRange(CvHistogram hist1, CvHistogram hist2, int cvComp) {
+		double dRate = findMatchRateByCvComp(cvComp);
+		double rate = cvCompareHist(hist1, hist2, cvComp);
+		if (cvComp == CV_COMP_INTERSECT) {
+			return rate < dRate;
+		} else if (cvComp == CV_COMP_CHISQR) {
+			return rate < dRate;
+		} else if (cvComp == CV_COMP_BHATTACHARYYA) {
+			return rate < dRate;
 		} else {
-			return rate < matchPermit;
+			return rate < dRate;
 		}
+	}
+
+	/**
+	 *
+	 * @param cvComp
+	 * @return double matchRate
+	 */
+	private double findMatchRateByCvComp(int cvComp)
+	{
+		return matchRateList.get(cvComp);
 	}
 
 	/**
@@ -99,22 +133,23 @@ public class Histogram {
 	 */
 	public void execute(List<CvHistogram> histograms) {
 		List<CvHistogram> hists = histograms;
-		Map<Integer, Map<Integer, Boolean>> group = new HashMap<Integer, Map<Integer, Boolean>>();
+		Map<String, Map<String, Boolean>> group = new HashMap<String, Map<String, Boolean>>();
 		int len = hists.size();
 		for (int i = 0; i < len; i++) {
-			if (!group.containsKey(i)) {
-				group.put(i, new HashMap<Integer, Boolean>());
+			String name = this.images.get(i);
+			if (!group.containsKey(name)) {
+				group.put(name, new HashMap<String, Boolean>());
 			} else {
 				continue;
 			}
 			for (int j = i + 1; j < len; j++) {
-
-				if (matchPattern(hists.get(i), hists.get(j), 0.2, CV_COMP_HELLINGER)) {
-					if (!group.containsKey(j)) {
-						group.put(j, new HashMap<Integer, Boolean>());
+				String bName = this.images.get(j);
+				if (allowableRange(hists.get(i), hists.get(j), CV_COMP_HELLINGER)) {
+					if (!group.containsKey(bName)) {
+						group.put(bName, new HashMap<String, Boolean>());
 					}
-					group.get(i).put(j, true);
-					group.get(j).put(i, true);
+					group.get(name).put(bName, true);
+					group.get(bName).put(name, true);
 				}
 			}
 		}
