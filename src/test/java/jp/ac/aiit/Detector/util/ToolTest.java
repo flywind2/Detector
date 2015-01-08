@@ -14,6 +14,7 @@ public class ToolTest {
         assertEquals(null, ret);
 
         String ret1 = Tool.getResourcePath(getClass(), "/aaa.txt");
+		System.out.print(ret1);
         assertEquals((new File("build/resources/test/aaa.txt")).getAbsolutePath(), ret1);
     }
 }
