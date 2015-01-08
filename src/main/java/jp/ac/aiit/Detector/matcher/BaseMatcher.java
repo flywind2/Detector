@@ -1,10 +1,8 @@
 package jp.ac.aiit.Detector.matcher;
 
 import java.util.List;
+import java.util.Map;
 
-/**
- * Created by development on 2014/12/20.
- */
 public abstract class BaseMatcher {
 
 	protected List<String> images;
@@ -17,8 +15,6 @@ public abstract class BaseMatcher {
 		this.images = images;
 	}
 
-	/**
-	 * 実行メソッド
-	 */
-	abstract void execute();
+	abstract  Map<String, Map<String, Boolean>> run();
+
 }
