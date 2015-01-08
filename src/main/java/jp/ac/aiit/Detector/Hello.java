@@ -21,8 +21,8 @@ public class Hello {
     public static void main(String[] args) throws Exception {
 		HistogramMatcher hm = new HistogramMatcher();
 		String path = System.getProperty("user.dir");
-		for (int i = 0; i < 10; i++) {
-			int j = (i % 13) + 1;
+		for (int i = 0; i < 8; i++) {
+			int j = (i % 9) + 1;
 			hm.addImage(path + "/src/main/resources/images/pic" + j + ".jpg");
 		}
 		hm.setImageColorType(CV_LOAD_IMAGE_GRAYSCALE);
