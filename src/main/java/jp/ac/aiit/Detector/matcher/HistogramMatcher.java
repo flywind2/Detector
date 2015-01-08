@@ -33,6 +33,13 @@ public class HistogramMatcher extends BaseMatcher {
 	private double allowableValue = 0.3;
 
 	/**
+	 * Constructor
+	 */
+	public HistogramMatcher() {
+		super();
+	}
+
+	/**
 	 * ヒストグラムを生成する時のカラータイプを設定する。
 	 *  - CV_LOAD_IMAGE_GRAY_SCALE: GrayScale.
 	 *  - CV_LOAD_IMAGE_COLOR     : RgbColorScale.
@@ -62,6 +69,9 @@ public class HistogramMatcher extends BaseMatcher {
 	 * 実行
 	 */
 	public Map<String, Map<String, Boolean>> run() {
+		if (this.images.isEmpty()) {
+			return null;
+		}
 		List<CvHistogram> hists = createHistogram();
 		Map<String, Map<String, Boolean>> group = new HashMap<String, Map<String, Boolean>>();
 		int len = hists.size();

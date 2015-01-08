@@ -43,10 +43,12 @@ dependencies {
     compile 'org.slf4j:slf4j-api:1.7.7'
     compile 'org.apache.sanselan:sanselan:0.97-incubator'
     compile 'org.bytedeco.javacpp-presets:opencv:2.4.9-0.9'
+    compile 'commons-dbutils:commons-dbutils:1.6'
     if (flgMacOs64) {
         // Mac OS Only
         // 2.4.9-0.9_macox_x64が壊れているため、暫定的にlibのjarを利用する
         compile files('lib/opencv-2.4.10-0.9.1-20141109.113201-4-macosx-x86_64.jar')
+
     } else {
         compile group: 'org.bytedeco.javacpp-presets', name: 'opencv', version: '2.4.9-0.9', classifier: opencvBinaryClassifer
     }

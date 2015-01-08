@@ -1,0 +1,14 @@
+language: java
+jdk:
+  - oraclejdk7
+  - oraclejdk8
+
+#env:
+#  global:
+
+before_install:
+  - "sudo apt-get install libv4l-dev"
+
+after_failure:
+  - ./gradlew test --info
+#  - "cat $TRAVIS_BUILD_DIR/log.log"
