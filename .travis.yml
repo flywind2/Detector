@@ -10,6 +10,7 @@ env:
 
 before_install:
   - "sudo apt-get install libv4l-dev"
+  - "export GIT_MESSAGE=`git log -1`"
 
 after_failure:
   - ./gradlew test --info

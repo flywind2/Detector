@@ -29,10 +29,11 @@ public class AutoTimeTest {
         //コミットメッセージ取得
 
 
-        //環境変数からAPIキーを取得
+        //環境変数からAPIキーとGITメッセージを取得
         //取得不可の場合はコンソールログ出力する
         String id = System.getenv("GOOGLE_USERNAME");
         String pass = System.getenv("GOOGLE_PASS");
+        String message = System.getenv("GIT_MESSAGE");
         if (pass == null) {
             System.out.println("gradle test");
             return;
@@ -61,9 +62,8 @@ public class AutoTimeTest {
 
         //行の追加
         ListEntry row = new ListEntry();
-        row.getCustomElements().setValueLocal("コミット日時", "にちじ");
+        row.getCustomElements().setValueLocal("コミット情報", message);
         row.getCustomElements().setValueLocal("処理時間", "じかん");
-        row.getCustomElements().setValueLocal("コミットコメント", "こめんと");
         row = service.insert(listFeedUrl, row);
 
     }
