@@ -70,7 +70,7 @@ public class AutoTimeTest {
         URL listFeedUrl = worksheet.getListFeedUrl();
         ListFeed listFeed = service.getFeed(listFeedUrl, ListFeed.class);
 
-        //行の追加
+        //行の追加(nullだとエラーとなるので注意)
         ListEntry row = new ListEntry();
         row.getCustomElements().setValueLocal("コミット情報", message);
         row.getCustomElements().setValueLocal("画像数", Integer.toString(count));
@@ -78,7 +78,7 @@ public class AutoTimeTest {
         row.getCustomElements().setValueLocal("処理時間", "じかん");
         row.getCustomElements().setValueLocal("認識率", "");
         row.getCustomElements().setValueLocal("Lire処理時間", retLire.get("tm") + "ms");
-        row.getCustomElements().setValueLocal("Lire認識率", retLire.get("rate"));
+        row.getCustomElements().setValueLocal("Lire認識率", "");
         row = service.insert(listFeedUrl, row);
 
     }
