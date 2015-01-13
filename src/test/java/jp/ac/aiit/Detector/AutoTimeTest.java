@@ -1,18 +1,21 @@
 package jp.ac.aiit.Detector;
 
-import com.google.gdata.client.spreadsheet.*;
+import com.google.gdata.client.spreadsheet.FeedURLFactory;
+import com.google.gdata.client.spreadsheet.SpreadsheetQuery;
+import com.google.gdata.client.spreadsheet.SpreadsheetService;
+import com.google.gdata.client.spreadsheet.WorksheetQuery;
 import com.google.gdata.data.spreadsheet.*;
 import com.google.gdata.util.AuthenticationException;
-import com.google.gdata.util.ServiceException;
 import jp.ac.aiit.Detector.util.Debug;
 import jp.ac.aiit.Detector.util.Tool;
 import jp.ac.aiit.DetectorLire.LireDemo;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
-import java.io.IOException;
+import java.io.File;
 import java.net.URL;
 import java.util.*;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * ライブラリの実行時間を自動で計測するクラス
@@ -29,7 +32,8 @@ public class AutoTimeTest {
     public void run() throws Exception {
 
         //画像数
-        int count = Tool.getResourcePathFileCount("/image");
+        File[] files = Tool.getResourcePathFileList("/image");
+        int count = files.length;
         //実行時間取得
         Map<String, String> retLire = new HashMap<String, String>();
         retLire = runLire();
@@ -109,8 +113,8 @@ public class AutoTimeTest {
     @Test
     public void calcRate() {
         //組み合わせグループ単位で正しい組み合わせか、間違った組み合わせかを判断し、認識率を算出する
-        //例：p001_01, p001_02, p002_01, p002_02, p002_03, d001というファイル名
-        // p001グループには01, 02 p002グループには01, 02, 03 d001はd001 という組み合わせが正しいとした場合
+        //例：p001_01, p001_02, p002_01, p002_02, p002_03, d001というファイル名で
+        // p001グループには01, 02 p002グループには01, 02, 03 d001グループはd001のみ という組み合わせが正しいとした場合
         // p001グループに01, 02以外があったらp001グループは正しくないとし、他があっていたら66%(2/3)と算出する
 
         //imageフォルダから正しい組み合わせを作成する

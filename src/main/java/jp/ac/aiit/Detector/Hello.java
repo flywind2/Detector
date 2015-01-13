@@ -2,15 +2,13 @@ package jp.ac.aiit.Detector;
 
 import jp.ac.aiit.Detector.matcher.HistogramMatcher;
 import jp.ac.aiit.Detector.util.Debug;
+import jp.ac.aiit.Detector.util.Tool;
+import org.bytedeco.javacpp.opencv_objdetect;
 
 import java.util.*;
 
-import jp.ac.aiit.Detector.util.Tool;
-import org.bytedeco.javacpp.*;
-
 import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_highgui.*;
-import static org.bytedeco.javacpp.opencv_imgproc.*;
 
 /**
  * テスト用クラス。いずれ消す

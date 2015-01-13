@@ -1,6 +1,5 @@
 package jp.ac.aiit.Detector.matcher;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**

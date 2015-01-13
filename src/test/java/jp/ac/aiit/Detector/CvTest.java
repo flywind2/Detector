@@ -1,7 +1,7 @@
 package jp.ac.aiit.Detector;
 
 import jp.ac.aiit.Detector.util.Tool;
-import org.bytedeco.javacpp.opencv_core.*;
+import org.bytedeco.javacpp.opencv_core.Mat;
 import org.junit.Test;
 
 import static org.bytedeco.javacpp.opencv_highgui.imread;

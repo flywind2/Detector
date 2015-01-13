@@ -1,10 +1,10 @@
 package jp.ac.aiit.Detector.util;
 
-import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.io.File;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 public class ToolTest {
 
@@ -19,14 +19,14 @@ public class ToolTest {
 
     @Test
     public void testGetResoucePathFileCount() throws Exception {
-        int ret = Tool.getResourcePathFileCount("test");
-        assertEquals(0, ret);
+        File[] ret = Tool.getResourcePathFileList("test");
+        assertEquals(null, ret);
 
-        int ret1 = Tool.getResourcePathFileCount("/aaa.txt");
-        assertEquals(1, ret1); //fileの場合は1
+        File[] ret1 = Tool.getResourcePathFileList("/aaa.txt");
+        assertEquals(1, ret1.length); //fileの場合は1
 
-        int ret2 = Tool.getResourcePathFileCount("/count");
-        assertEquals(2, ret2);
+        File[] ret2 = Tool.getResourcePathFileList("/count");
+        assertEquals(2, ret2.length);
 
     }
 

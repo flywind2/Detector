@@ -1,9 +1,10 @@
 package jp.ac.aiit.Detector.util;
 
-import static org.junit.Assert.*;
-
 import jp.ac.aiit.Detector.matcher.HistogramMatcher;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 
 public class HistogramTest {
