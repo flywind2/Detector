@@ -11,6 +11,6 @@ public class CvTest {
     @Test
     public void testCvLib() {
         // opencvライブラリ呼び出しテスト
-        Mat image = imread(Tool.getResourcePath(this.getClass(), "/lena.png"));
+        Mat image = imread(Tool.getResourcePath("/lena.png"));
     }
 }

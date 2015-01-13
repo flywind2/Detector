@@ -6,13 +6,13 @@ import com.google.gdata.util.AuthenticationException;
 import com.google.gdata.util.ServiceException;
 import jp.ac.aiit.Detector.util.Debug;
 import jp.ac.aiit.Detector.util.Tool;
+import jp.ac.aiit.DetectorLire.LireDemo;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * ライブラリの実行時間を自動で計測するクラス
@@ -26,10 +26,10 @@ public class AutoTimeTest {
     private final String APP_NAME = "pbl2014-Detector-0.1";
 
     @Test
-    public void run() throws ServiceException, IOException {
+    public void run() throws Exception {
 
         //画像数
-        int count = Tool.getResourcePathFileCount(getClass(), "/image");
+        int count = Tool.getResourcePathFileCount("/image");
         //実行時間取得
         Map<String, String> retLire = new HashMap<String, String>();
         retLire = runLire();
@@ -92,14 +92,38 @@ public class AutoTimeTest {
         return service;
     }
 
-    private Map<String, String> runLire() {
+    private Map<String, String> runLire() throws Exception{
 
         Map<String, String> ret = new HashMap<String, String>();
+
+        LireDemo lire = new LireDemo();
+        lire.search();
 
         long start = System.currentTimeMillis();
         long end = System.currentTimeMillis();
         ret.put("tm", Long.toString(end - start));
 
         return ret;
+    }
+
+    @Test
+    public void calcRate() {
+        //組み合わせグループ単位で正しい組み合わせか、間違った組み合わせかを判断し、認識率を算出する
+        //例：p001_01, p001_02, p002_01, p002_02, p002_03, d001というファイル名
+        // p001グループには01, 02 p002グループには01, 02, 03 d001はd001 という組み合わせが正しいとした場合
+        // p001グループに01, 02以外があったらp001グループは正しくないとし、他があっていたら66%(2/3)と算出する
+
+        //imageフォルダから正しい組み合わせを作成する
+
+        Set h = new HashSet();
+        h.add("aaa");
+        h.add("bbb");
+        Set h1 = new HashSet();
+        h1.add("bbb");
+        h1.add("aaa");
+
+        assertTrue(h.equals(h1));
+
+
     }
 }

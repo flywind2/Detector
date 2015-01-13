@@ -18,21 +18,21 @@ import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.store.FSDirectory;
 
-public class LireCreateIndex {
+public class LireDemo {
 
 	// 分析対象フォルダ
-	private static String TARGET_DIR;
+	private String TARGET_DIR;
 
 	// 一時中間データ保存フォルダ
-	private static String INDEX_PATH;
+	private String INDEX_PATH;
 	
 	// 画像違い度（0になたら、完全に類似）
-	private final static int DIFF_LEVEL = 5;
+	public int DIFF_LEVEL = 10;
 		
-	public static void main(String[] args) throws IOException {
+	public void search() throws IOException {
 
-		TARGET_DIR = Tool.getResourcePath(LireCreateIndex.class, "/image");
-		INDEX_PATH = Tool.getResourcePath(LireCreateIndex.class, "/index");
+		TARGET_DIR = Tool.getResourcePath("/image");
+		INDEX_PATH = Tool.getResourcePath("/index");
 
         // 処理開始時間を取得します
         long startTime = System.currentTimeMillis();

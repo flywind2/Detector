@@ -9,15 +9,14 @@ public class Tool {
      * getResources()を利用するとWindowsでは
      * 「/C:/aaa/bbb/ccc.txt」と言う形で頭にスラッシュが入ってしまう。
      *
-     * @param c Class getClass() またはstatic methodの場合はHello.class
      * @param s String resourcesフォルダのファイル。頭にスラッシュをつける事
      * @return
      */
-    public static String getResourcePath(Class c, String s) {
-        if (c.getResource(s) == null) {
+    public static String getResourcePath(String s) {
+        if (Tool.class.getResource(s) == null) {
             return null;
         }
-        String p = c.getResource(s).getFile();
+        String p = Tool.class.getResource(s).getFile();
         File f = new File(p);
         return f.getAbsolutePath();
     }
@@ -25,16 +24,15 @@ public class Tool {
     /**
      * resoucesフォルダ内のフォルダにファイルがいくつあるか返却する
      *
-     * @param c
      * @param s
      * @return
      */
-    public static int getResourcePathFileCount(Class c, String s) {
+    public static int getResourcePathFileCount(String s) {
         int ret = 0;
-        if (c.getResource(s) == null) {
+        if (Tool.class.getResource(s) == null) {
             return 0;
         }
-        String p = c.getResource(s).getFile();
+        String p = Tool.class.getResource(s).getFile();
         File f = new File(p);
         File[] fs = f.listFiles();
 
