@@ -1,8 +1,8 @@
 package jp.ac.aiit.Detector;
 
-import jp.ac.aiit.Detector.matcher.HistogramMatcher;
 import jp.ac.aiit.Detector.util.Debug;
 import jp.ac.aiit.Detector.util.Tool;
+import jp.ac.aiit.Detector.matcher.*;
 import org.bytedeco.javacpp.opencv_objdetect;
 
 import java.util.*;
