@@ -12,7 +12,7 @@ public class HistogramTest {
 	@Test
 	public void setImageRun() {
 		HistogramMatcher hm = new HistogramMatcher();
-		String imgName = Tool.getResourcePath("/image/pic1.JPG");
+		String imgName = Tool.getResourcePath("/image/d001.jpg");
 		for (int i = 0; i < 2; i++) {
 			hm.addImage(imgName);
 		}
