@@ -85,7 +85,7 @@ public class LireDemo {
 									+ ": "
 									+ hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER)
 											.stringValue());
-							fileNameList.remove(DetectorUtil.getSuffix(hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue()));
+							fileNameList.remove((new File(hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue())).getName());
 							
 						}
 					}
