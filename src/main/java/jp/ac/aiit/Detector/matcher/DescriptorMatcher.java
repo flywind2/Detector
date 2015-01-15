@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class DescriptorMatcher extends BaseMatcher {
 
-	public  Map<String, Map<String, Boolean>>  run() {
+	public  Map<String, Map<String, Double>>  run() {
 		return null;
 	}
 }

@@ -7,6 +7,8 @@ import java.util.Map;
 public abstract class BaseMatcher {
 
 	protected List<String> images;
+	private long startTime = 0;
+	private long endTime   = 0;
 
 	/**
 	 * Constructor
@@ -33,6 +35,23 @@ public abstract class BaseMatcher {
 		}
 	}
 
+	public long getProcessingTime() {
+		return endTime - startTime;
+	}
+
+	public void resetTimeWatch() {
+		startTime = 0;
+		endTime   = 0;
+	}
+
+	protected void startTimeWatch() {
+		startTime = System.currentTimeMillis();
+	}
+
+	protected void endTimeWatch() {
+		endTime = System.currentTimeMillis();
+	}
+
 	/**
 	 * 画像のクリア
 	 */
@@ -48,6 +67,6 @@ public abstract class BaseMatcher {
 		this.images = images;
 	}
 
-	abstract  Map<String, Map<String, Boolean>> run();
+	abstract  Map<String, Map<String, Double>> run();
 
 }

@@ -21,17 +21,29 @@ public class Hello {
     public static void main(String[] args) throws Exception {
 		HistogramMatcher hm = new HistogramMatcher();
 		String path = System.getProperty("user.dir");
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < 9; i++) {
 			int j = (i % 9) + 1;
 			hm.addImage(path + "/src/main/resources/images/pic" + j + ".jpg");
 		}
 		hm.setImageColorType(CV_LOAD_IMAGE_GRAYSCALE);
-		hm.setAllowableValue(0.8);
-		long start = System.currentTimeMillis();
+		hm.setAllowableValue(0.82);
 		System.out.println(hm.run());
-		long stop = System.currentTimeMillis();
-		System.out.println("実行にかかった時間は " + (stop - start) + " ミリ秒です。");
+		System.out.println("実行にかかった時間は " + hm.getProcessingTime() + " ミリ秒です。");
 	}
+
+	/**
+	 * {
+	 * pic1.jpg={pic2.jpg=0.8478878991152214},
+	 * pic4.jpg={
+	 * 	pic5.jpg=0.8499969644136627,
+	 * 	pic6.jpg=0.8448676025663246
+	 * 	},
+	 * pic9.jpg={},
+	 * pic3.jpg={},
+	 * pic7.jpg={pic8.jpg=0.8658020594575646}
+	 * }
+	 * @param args
+	 */
 
     public static void mains(String[] args) {
         Debug.debug("test", "aaaaaaa");
