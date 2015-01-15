@@ -30,7 +30,7 @@ public class HistogramMatcher extends BaseMatcher {
 	/**
 	 * 認識の許容範囲
 	 */
-	private double allowableValue = 0.3;
+	private double allowableValue = 0.8;
 
 	/**
 	 * Constructor
@@ -68,31 +68,33 @@ public class HistogramMatcher extends BaseMatcher {
 	/**
 	 * 実行
 	 */
-	public Map<String, Map<String, Boolean>> run() {
+	public Map<String, Map<String, Double>> run() {
+		startTimeWatch();
 		if (this.images.isEmpty()) {
+			endTimeWatch();
 			return null;
 		}
 		List<CvHistogram> hists = createHistogram();
-		Map<String, Map<String, Boolean>> group = new HashMap<String, Map<String, Boolean>>();
+		Map<String, Map<String, Double>> group = new HashMap<String, Map<String, Double>>();
+		Map<String, Boolean> skip              = new HashMap<String, Boolean>();
 		int len = hists.size();
 		for (int i = 0; i < len; i++) {
 			String name = this.images.get(i);
-			if (!group.containsKey(name)) {
-				group.put(name, new HashMap<String, Boolean>());
-			} else {
+			group.put(name, new HashMap<String, Double>());
+			group.get(name).put(name, getCompareHistValue(hists.get(i), hists.get(i), this.compareType));
+			if (skip.containsKey(name)) {
 				continue;
 			}
 			for (int j = i + 1; j < len; j++) {
 				String bName = this.images.get(j);
-				if (allowableRange(hists.get(i), hists.get(j), this.compareType)) {
-					if (!group.containsKey(bName)) {
-						group.put(bName, new HashMap<String, Boolean>());
-					}
-					group.get(name).put(bName, true);
-					group.get(bName).put(name, true);
+				double histValue = getCompareHistValue(hists.get(i), hists.get(j), this.compareType);
+				if (allowableRange(histValue)) {
+					group.get(name).put(bName, histValue);
+					skip.put(bName, true);
 				}
 			}
 		}
+		endTimeWatch();
 		return group;
 	}
 
@@ -137,7 +139,7 @@ public class HistogramMatcher extends BaseMatcher {
 	private List<CvHistogram> createColorHistogram() {
 		List<CvHistogram> hists = new ArrayList<CvHistogram>();
 		for (int i = 0; i < images.size(); i++) {
-			IplImage img = cvLoadImage(images.get(i), CV_LOAD_IMAGE_COLOR);
+			IplImage img       = cvLoadImage(images.get(i), CV_LOAD_IMAGE_COLOR);
 			List<IplImage> dst = new ArrayList<IplImage>();
 			for (int j = 0; j < img.nChannels(); j++) {
 				dst.add(cvCreateImage(cvSize(img.width(), img.height()), img.depth(), 1));
@@ -155,24 +157,25 @@ public class HistogramMatcher extends BaseMatcher {
 		return hists;
 	}
 
+	private double getCompareHistValue(CvHistogram hist1, CvHistogram hist2, int cvComp) {
+		return cvCompareHist(hist1, hist2, cvComp);
+	}
+
 	/**
 	 * マッチパターンを決めて、ヒストグラムの比較を行う。
 	 * Correlation(CV_COMP_CORREL)                   : 0.870168
 	 * Intersection(CV_COMP_INTERSECT)               : 0.847536
 	 * Chi-square(CV_COMP_CHSQR)                     : 0.075862
 	 * Bhattacharyya distance(CV_COMP_BHATTACHARYYA) : 0.139961
-	 * @param hist1
-	 * @param hist2
-	 * @param cvComp
+	 * @param histValue
 	 * @return boolean
 	 */
-	private boolean allowableRange(CvHistogram hist1, CvHistogram hist2, int cvComp) {
-		double similarityValue = cvCompareHist(hist1, hist2, cvComp);
-		if (cvComp == CV_COMP_INTERSECT ||
-				cvComp == CV_COMP_CORREL) {
-			return similarityValue < allowableValue;
+	private boolean allowableRange(double histValue) {
+		if (this.compareType == CV_COMP_INTERSECT ||
+				this.compareType == CV_COMP_CORREL) {
+			return histValue > allowableValue;
 		}
-		return similarityValue > allowableValue;
+		return histValue < allowableValue;
 	}
 
 }
