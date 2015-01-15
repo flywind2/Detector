@@ -1,5 +1,7 @@
 package jp.ac.aiit.Detector;
 
+import com.google.common.base.Objects;
+import com.google.common.base.Stopwatch;
 import com.google.gdata.client.spreadsheet.FeedURLFactory;
 import com.google.gdata.client.spreadsheet.SpreadsheetQuery;
 import com.google.gdata.client.spreadsheet.SpreadsheetService;
@@ -12,6 +14,7 @@ import jp.ac.aiit.DetectorLire.LireDemo;
 import org.junit.Test;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.*;
 
@@ -103,9 +106,10 @@ public class AutoTimeTest {
         LireDemo lire = new LireDemo();
         lire.search();
 
-        long start = System.currentTimeMillis();
-        long end = System.currentTimeMillis();
-        ret.put("tm", Long.toString(end - start));
+        Stopwatch sw = Stopwatch.createUnstarted();
+        sw.start();
+        sw.stop();
+        ret.put("tm", sw.toString());
 
         return ret;
     }
@@ -118,16 +122,51 @@ public class AutoTimeTest {
         // p001グループに01, 02以外があったらp001グループは正しくないとし、他があっていたら66%(2/3)と算出する
 
         //imageフォルダから正しい組み合わせを作成する
+        Map<String, Map<String, Double>> imageFolderMap = new HashMap<>();
+        File[] files = Tool.getResourcePathFileList("/image");
+        for (File f: files) {
+            String name = f.getName();
 
-        Set h = new HashSet();
-        h.add("aaa");
-        h.add("bbb");
-        Set h1 = new HashSet();
-        h1.add("bbb");
-        h1.add("aaa");
+            if (name.indexOf("d") == 0) {
+                //dなら一人グループ
+                Map<String, Double> tmp = new HashMap<>();
+                tmp.put(name, 1.0);
+                imageFolderMap.put(name, tmp);
+            } else if (name.indexOf("p") == 0) {
+                //pならグループわけ
+                //pxxx_01.jpg
+                String pxxx_01 = name.split("_")[0] + "_01" + name.substring(name.lastIndexOf("."));
+                if (imageFolderMap.containsKey(pxxx_01)) {
+                    imageFolderMap.get(pxxx_01).put(name, 1.0);
+                } else {
+                    Map<String, Double>tmp = new HashMap<>();
+                    tmp.put(name, 1.0);
+                    imageFolderMap.put(pxxx_01, tmp);
+                }
+            }
+        }
 
-        assertTrue(h.equals(h1));
+        int count = 0;
+        int valid = 0;
+        //test用
+        Map<String, Map<String, Double>> t = new HashMap<>();
+        Map<String, Double> t1 = new HashMap<>();
+        t1.put("p001_01.JPG", 0.5);
+        t1.put("p001_02.JPG", 0.5);
+        t.put("p001_01.JPG", t1);
 
+        for (Map.Entry<String, Map<String, Double>> e: imageFolderMap.entrySet()) {
+            count++;
+            if (t.get(e.getKey()) != null
+                    && Objects.equal(e.getValue().keySet(), t.get(e.getKey()).keySet())) {
+                //認識エンジンの結果から同じキーのHashMapが取得でき
+                //かつそこから同じkeySet(キー値のset)が取得できたら認識しているとみなす
+                valid++;
+            }
+        }
 
+        BigDecimal v = new BigDecimal(valid);
+        BigDecimal c = new BigDecimal(count);
+        Debug.debug(v.divide(c).toString());
     }
 }

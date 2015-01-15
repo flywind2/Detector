@@ -29,11 +29,4 @@ public class ToolTest {
         assertEquals(2, ret2.length);
 
     }
-
-    @Test
-    public void testResources() throws Exception {
-
-        Debug.debug(Tool.getResourcePath("/image/pic1.JPG"));
-
-    }
 }

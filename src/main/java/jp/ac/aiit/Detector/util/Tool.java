@@ -1,6 +1,9 @@
 package jp.ac.aiit.Detector.util;
 
 import java.io.File;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class Tool {
 
@@ -54,4 +57,5 @@ public class Tool {
             return fs;
         }
     }
+
 }
