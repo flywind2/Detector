@@ -1,16 +1,14 @@
 package jp.ac.aiit.Detector;
 
-import jp.ac.aiit.Detector.matcher.HistogramMatcher;
 import jp.ac.aiit.Detector.util.Debug;
+import jp.ac.aiit.Detector.util.Tool;
+import jp.ac.aiit.Detector.matcher.*;
+import org.bytedeco.javacpp.opencv_objdetect;
 
 import java.util.*;
 
-import jp.ac.aiit.Detector.util.Tool;
-import org.bytedeco.javacpp.*;
-
 import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_highgui.*;
-import static org.bytedeco.javacpp.opencv_imgproc.*;
 
 /**
  * テスト用クラス。いずれ消す
@@ -59,10 +57,10 @@ public class Hello {
         Debug.debug("test;" , cal);
 
         opencv_objdetect.CascadeClassifier faceDetector
-                = new opencv_objdetect.CascadeClassifier(Tool.getResourcePath(Hello.class, "/lbpcascade_frontalface.xml"));
+                = new opencv_objdetect.CascadeClassifier(Tool.getResourcePath("/lbpcascade_frontalface.xml"));
 
-        Mat image = imread(Tool.getResourcePath(Hello.class, "/lena.png"));
-        IplImage im = cvLoadImage(Tool.getResourcePath(Hello.class, "/lena.png"));
+        Mat image = imread(Tool.getResourcePath("/lena.png"));
+        IplImage im = cvLoadImage(Tool.getResourcePath("/lena.png"));
 
         System.out.println((int)(image.data().get((int)(0*image.cols()+0*image.step()+2)) & 0xFF));
         System.out.println((int)(image.ptr(0,0).get(2) & 0xFF));
@@ -97,8 +95,8 @@ public class Hello {
 		Debug.debug("test;" , cal);
 
 		opencv_objdetect.CascadeClassifier faceDetector
-				= new opencv_objdetect.CascadeClassifier(Tool.getResourcePath(Hello.class, "/lbpcascade_frontalface.xml"));
-		Mat image = imread(Tool.getResourcePath(Hello.class, "/lena.png"));
+				= new opencv_objdetect.CascadeClassifier(Tool.getResourcePath("/lbpcascade_frontalface.xml"));
+		Mat image = imread(Tool.getResourcePath("/lena.png"));
 
 		Rect faceDetections = new Rect();
 		faceDetector.detectMultiScale(image, faceDetections);

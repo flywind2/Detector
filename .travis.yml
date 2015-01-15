@@ -3,11 +3,14 @@ jdk:
   - oraclejdk7
   - oraclejdk8
 
-#env:
-#  global:
+env:
+  global:
+    - secure: "jwGPdYzM7qlJSMN9L6RkLaCV+3IrHKuq9+EuPFz0Lr5KBM+LirtBXNZwpgrTdPpZtV/LyK90L1JjU+gcb1QMiZ4HnqYomJNiDzgFhQiK8LnofQ4JPHMpTGxuAI/O4V3AoNNkZCsv836m9Pzpm/hhPfjPQLzFreh18ENGlXCfGOw="
+    - secure: "rPZ5x/nXU8Uth7L+1PlxVuNQRZZFKvZeYWJKtex8oBbTncPU8jPnTAfzMH43o2c1HZM2e8v6cZU7hozM/T97njTKuquXMbo47PvrfZGcCcjJcw+V0XaTecSNrY1qA9YtbTuTVTnrTZQ88LPAO+FBVM21BFKEw6D8E7rBSI2SUYg="
 
 before_install:
   - "sudo apt-get install libv4l-dev"
+  - "export GIT_MESSAGE=`git log -1`"
 
 after_failure:
   - ./gradlew test --info

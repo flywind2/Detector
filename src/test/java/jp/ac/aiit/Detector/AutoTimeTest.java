@@ -1,0 +1,133 @@
+package jp.ac.aiit.Detector;
+
+import com.google.gdata.client.spreadsheet.FeedURLFactory;
+import com.google.gdata.client.spreadsheet.SpreadsheetQuery;
+import com.google.gdata.client.spreadsheet.SpreadsheetService;
+import com.google.gdata.client.spreadsheet.WorksheetQuery;
+import com.google.gdata.data.spreadsheet.*;
+import com.google.gdata.util.AuthenticationException;
+import jp.ac.aiit.Detector.util.Debug;
+import jp.ac.aiit.Detector.util.Tool;
+import jp.ac.aiit.DetectorLire.LireDemo;
+import org.junit.Test;
+
+import java.io.File;
+import java.net.URL;
+import java.util.*;
+
+import static org.junit.Assert.assertTrue;
+
+/**
+ * ライブラリの実行時間を自動で計測するクラス
+ * コンソールログ出力またはスプレッドシートへの記録まで行う。
+ *
+ * 本クラスはテスト時に自動的に実行されるものとする
+ *
+ */
+public class AutoTimeTest {
+
+    private final String APP_NAME = "pbl2014-Detector-0.1";
+
+    @Test
+    public void run() throws Exception {
+
+        //画像数
+        File[] files = Tool.getResourcePathFileList("/image");
+        int count = files.length;
+        //実行時間取得
+        Map<String, String> retLire = new HashMap<String, String>();
+        retLire = runLire();
+
+        //環境変数からAPIキーとGITメッセージを取得
+        //取得不可の場合はコンソールログ出力する
+        String id = System.getenv("GOOGLE_USERNAME");
+        String pass = System.getenv("GOOGLE_PASS");
+        String jdkVer = System.getenv("TRAVIS_JDK_VERSION");
+        String message = System.getenv("GIT_MESSAGE");
+        if (pass == null) {
+            Debug.debug("画像数", count);
+            Debug.debug("Detector実行時間", "");
+            Debug.debug("Detector認識率", "");
+            Debug.debug("Lire実行時間", retLire.get("tm"));
+            Debug.debug("Lire認識率", retLire.get("rate"));
+            return;
+        }
+
+        SpreadsheetService service = getService(id, pass);
+
+        // ファイルを取得
+        FeedURLFactory urlFactory = FeedURLFactory.getDefault();
+        SpreadsheetQuery spreadsheetQuery = new SpreadsheetQuery(urlFactory.getSpreadsheetsFeedUrl());
+        spreadsheetQuery.setTitleQuery("processing_time");
+        SpreadsheetFeed spreadsheetFeed = service.query(spreadsheetQuery, SpreadsheetFeed.class);
+        SpreadsheetEntry sheet = spreadsheetFeed.getEntries().get(0);
+
+        // WorkSheetを取得
+        URL url = sheet.getWorksheetFeedUrl();
+        WorksheetQuery query = new WorksheetQuery(url);
+        query.setTitleQuery("集計");
+        WorksheetFeed feed = service.query(query, WorksheetFeed.class);
+        List<WorksheetEntry> worksheetEntryList = feed.getEntries();
+
+        //WorkSheetを確定し、文言の追加
+        WorksheetEntry worksheet = worksheetEntryList.get(0);
+        URL listFeedUrl = worksheet.getListFeedUrl();
+        ListFeed listFeed = service.getFeed(listFeedUrl, ListFeed.class);
+
+        //行の追加(nullだとエラーとなるので注意)
+        ListEntry row = new ListEntry();
+        row.getCustomElements().setValueLocal("コミット情報", message);
+        row.getCustomElements().setValueLocal("画像数", Integer.toString(count));
+        row.getCustomElements().setValueLocal("JDK", jdkVer);
+        row.getCustomElements().setValueLocal("処理時間", "じかん");
+        row.getCustomElements().setValueLocal("認識率", "");
+        row.getCustomElements().setValueLocal("Lire処理時間", retLire.get("tm") + "ms");
+        row.getCustomElements().setValueLocal("Lire認識率", "");
+        row = service.insert(listFeedUrl, row);
+
+    }
+
+    private SpreadsheetService getService(String id, String pass) throws AuthenticationException{
+
+        // Spreadsheetsサービスへの認証を行う
+        SpreadsheetService service = new SpreadsheetService(APP_NAME);
+        service.setUserCredentials(id, pass);
+
+        return service;
+    }
+
+    private Map<String, String> runLire() throws Exception{
+
+        Map<String, String> ret = new HashMap<String, String>();
+
+        LireDemo lire = new LireDemo();
+        lire.search();
+
+        long start = System.currentTimeMillis();
+        long end = System.currentTimeMillis();
+        ret.put("tm", Long.toString(end - start));
+
+        return ret;
+    }
+
+    @Test
+    public void calcRate() {
+        //組み合わせグループ単位で正しい組み合わせか、間違った組み合わせかを判断し、認識率を算出する
+        //例：p001_01, p001_02, p002_01, p002_02, p002_03, d001というファイル名で
+        // p001グループには01, 02 p002グループには01, 02, 03 d001グループはd001のみ という組み合わせが正しいとした場合
+        // p001グループに01, 02以外があったらp001グループは正しくないとし、他があっていたら66%(2/3)と算出する
+
+        //imageフォルダから正しい組み合わせを作成する
+
+        Set h = new HashSet();
+        h.add("aaa");
+        h.add("bbb");
+        Set h1 = new HashSet();
+        h1.add("bbb");
+        h1.add("aaa");
+
+        assertTrue(h.equals(h1));
+
+
+    }
+}

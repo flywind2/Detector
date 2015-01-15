@@ -31,13 +31,15 @@ ext {
 
 }
 
-
 repositories {
     mavenCentral()
 }
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile 'org.apache.geronimo.javamail:geronimo-javamail_1.4_mail:1.8.4'
+    testCompile fileTree(dir:'lib/gdata', include:'*.jar')
+    testCompile fileTree(dir:'lib/lire', include:'*.jar')
     compile 'org.apache.derby:derby:10.11.1.1'
     compile 'com.google.guava:guava:18.0'
     compile 'org.slf4j:slf4j-api:1.7.7'

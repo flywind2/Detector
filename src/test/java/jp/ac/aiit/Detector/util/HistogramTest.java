@@ -1,9 +1,10 @@
 package jp.ac.aiit.Detector.util;
 
-import static org.junit.Assert.*;
-
 import jp.ac.aiit.Detector.matcher.HistogramMatcher;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 
 public class HistogramTest {
@@ -11,7 +12,7 @@ public class HistogramTest {
 	@Test
 	public void setImageRun() {
 		HistogramMatcher hm = new HistogramMatcher();
-		String imgName = Tool.getResourcePath(getClass(), "/images/pic1.JPG");
+		String imgName = Tool.getResourcePath("/image/d001.jpg");
 		for (int i = 0; i < 2; i++) {
 			hm.addImage(imgName);
 		}
