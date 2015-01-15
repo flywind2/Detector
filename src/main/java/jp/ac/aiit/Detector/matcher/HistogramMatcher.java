@@ -79,13 +79,14 @@ public class HistogramMatcher extends BaseMatcher {
 		Map<String, Boolean> skip              = new HashMap<String, Boolean>();
 		int len = hists.size();
 		for (int i = 0; i < len; i++) {
-			String name = this.images.get(i).replace("/Users/development/develop/java/Detector/src/main/resources/images/", "");
+			String name = this.images.get(i);
+			group.put(name, new HashMap<String, Double>());
+			group.get(name).put(name, getCompareHistValue(hists.get(i), hists.get(i), this.compareType));
 			if (skip.containsKey(name)) {
 				continue;
 			}
-			group.put(name, new HashMap<String, Double>());
 			for (int j = i + 1; j < len; j++) {
-				String bName = this.images.get(j).replace("/Users/development/develop/java/Detector/src/main/resources/images/", "");
+				String bName = this.images.get(j);
 				double histValue = getCompareHistValue(hists.get(i), hists.get(j), this.compareType);
 				if (allowableRange(histValue)) {
 					group.get(name).put(bName, histValue);
