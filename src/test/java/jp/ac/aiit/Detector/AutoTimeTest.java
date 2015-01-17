@@ -85,7 +85,7 @@ public class AutoTimeTest {
         row.getCustomElements().setValueLocal("処理時間", "じかん");
         row.getCustomElements().setValueLocal("認識率", "");
         row.getCustomElements().setValueLocal("Lire処理時間", retLire.get("tm"));
-        row.getCustomElements().setValueLocal("Lire認識率", "");
+        row.getCustomElements().setValueLocal("Lire認識率", retLire.get("rate"));
         row = service.insert(listFeedUrl, row);
 
     }
