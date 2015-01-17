@@ -29,13 +29,15 @@ public class LireDemo {
 	// 画像違い度（0になたら、完全に類似）
 	public int DIFF_LEVEL = 10;
 		
-	public void search() throws IOException {
+	public Map<String, Map<String, Double>> search() throws IOException {
 
 		TARGET_DIR = Tool.getResourcePath("/image");
 		INDEX_PATH = Tool.getResourcePath("/index");
 
+		Map<String, Map<String, Double>> ret = new HashMap<>();
+
         // 処理開始時間を取得します
-        long startTime = System.currentTimeMillis();
+        //long startTime = System.currentTimeMillis();
         // グループ計数
 		int count = 0;
 		// 分析対象ファイル数
@@ -75,18 +77,15 @@ public class LireDemo {
 					File obj = (File)fileMap.get(fileNameList.get(0));
 					biImg = DetectorUtil.loadImage(obj);	
 					hits = searcher.search(biImg, reader);
-					// 似ている画像をコンソールに出力する
-					System.out.println("重複画像グループ" + count);
+
+					Map<String, Double> temp = new HashMap<>();
+					ret.put(obj.getName(), temp);
 					for (int i = 0; i < hits.length(); i++) {
 						// 類似度より抽出する
 						if (hits.score(i) <= DIFF_LEVEL) {
-							System.out
-							.println(hits.score(i)
-									+ ": "
-									+ hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER)
-											.stringValue());
-							fileNameList.remove((new File(hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue())).getName());
-							
+							String filepath = hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue();
+							fileNameList.remove((new File(filepath)).getName());
+							temp.put((new File(filepath)).getName(), (double)hits.score(i));
 						}
 					}
 					count++;	
@@ -98,10 +97,12 @@ public class LireDemo {
 		}
 		
         // 処理終了時間を取得します
-        long endTime = System.currentTimeMillis();
+        //long endTime = System.currentTimeMillis();
         
         // 処理終了時間から処理開始時間を差し引いてミリ秒で処理時間を表示します
-        System.out.println("処理時間：" + (endTime - startTime)  + "ms");
+        //System.out.println("処理時間：" + (endTime - startTime)  + "ms");
+
+		return ret;
 	}
 
 }

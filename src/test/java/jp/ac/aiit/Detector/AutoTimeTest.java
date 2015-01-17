@@ -8,7 +8,6 @@ import com.google.gdata.client.spreadsheet.SpreadsheetService;
 import com.google.gdata.client.spreadsheet.WorksheetQuery;
 import com.google.gdata.data.spreadsheet.*;
 import com.google.gdata.util.AuthenticationException;
-import jp.ac.aiit.Detector.util.Debug;
 import jp.ac.aiit.Detector.util.Tool;
 import jp.ac.aiit.DetectorLire.LireDemo;
 import org.junit.Test;
@@ -18,6 +17,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.*;
 
+import static jp.ac.aiit.Detector.util.Debug.debug;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -48,11 +48,11 @@ public class AutoTimeTest {
         String jdkVer = System.getenv("TRAVIS_JDK_VERSION");
         String message = System.getenv("GIT_MESSAGE");
         if (pass == null) {
-            Debug.debug("画像数", count);
-            Debug.debug("Detector実行時間", "");
-            Debug.debug("Detector認識率", "");
-            Debug.debug("Lire実行時間", retLire.get("tm"));
-            Debug.debug("Lire認識率", retLire.get("rate"));
+            debug("画像数", count);
+            debug("Detector実行時間", "");
+            debug("Detector認識率", "");
+            debug("Lire実行時間", retLire.get("tm"));
+            debug("Lire認識率", retLire.get("rate"));
             return;
         }
 
@@ -84,7 +84,7 @@ public class AutoTimeTest {
         row.getCustomElements().setValueLocal("JDK", jdkVer);
         row.getCustomElements().setValueLocal("処理時間", "じかん");
         row.getCustomElements().setValueLocal("認識率", "");
-        row.getCustomElements().setValueLocal("Lire処理時間", retLire.get("tm") + "ms");
+        row.getCustomElements().setValueLocal("Lire処理時間", retLire.get("tm"));
         row.getCustomElements().setValueLocal("Lire認識率", "");
         row = service.insert(listFeedUrl, row);
 
@@ -101,21 +101,23 @@ public class AutoTimeTest {
 
     private Map<String, String> runLire() throws Exception{
 
-        Map<String, String> ret = new HashMap<String, String>();
-
-        LireDemo lire = new LireDemo();
-        lire.search();
-
+        Map<String, String> ret = new HashMap<>();
         Stopwatch sw = Stopwatch.createUnstarted();
         sw.start();
+        //処理時間計測
+        LireDemo lire = new LireDemo();
+        Map<String, Map<String, Double>> lireResult = lire.search();
         sw.stop();
         ret.put("tm", sw.toString());
+
+        //認識率計測
+        String rate = calcRate(lireResult);
+        ret.put("rate", rate);
 
         return ret;
     }
 
-    @Test
-    public void calcRate() {
+    public String calcRate(Map<String, Map<String, Double>> result) {
         //組み合わせグループ単位で正しい組み合わせか、間違った組み合わせかを判断し、認識率を算出する
         //例：p001_01, p001_02, p002_01, p002_02, p002_03, d001というファイル名で
         // p001グループには01, 02 p002グループには01, 02, 03 d001グループはd001のみ という組み合わせが正しいとした場合
@@ -148,17 +150,11 @@ public class AutoTimeTest {
 
         int count = 0;
         int valid = 0;
-        //test用
-        Map<String, Map<String, Double>> t = new HashMap<>();
-        Map<String, Double> t1 = new HashMap<>();
-        t1.put("p001_01.JPG", 0.5);
-        t1.put("p001_02.JPG", 0.5);
-        t.put("p001_01.JPG", t1);
 
         for (Map.Entry<String, Map<String, Double>> e: imageFolderMap.entrySet()) {
             count++;
-            if (t.get(e.getKey()) != null
-                    && Objects.equal(e.getValue().keySet(), t.get(e.getKey()).keySet())) {
+            if (result.get(e.getKey()) != null
+                    && Objects.equal(e.getValue().keySet(), result.get(e.getKey()).keySet())) {
                 //認識エンジンの結果から同じキーのHashMapが取得でき
                 //かつそこから同じkeySet(キー値のset)が取得できたら認識しているとみなす
                 valid++;
@@ -167,6 +163,6 @@ public class AutoTimeTest {
 
         BigDecimal v = new BigDecimal(valid);
         BigDecimal c = new BigDecimal(count);
-        Debug.debug(v.divide(c).toString());
+        return v.divide(c).toString();
     }
 }
