@@ -21,6 +21,7 @@ public class HistogramTest {
 			String fileName = file.getAbsolutePath();
 			hm.addImage(fileName);
 		}
+		hm.run();
 		// Runの中に認識結果が有る.
 		assertNotEquals("gray scale type run", hm.run(), null);
 	}
