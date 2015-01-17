@@ -69,35 +69,34 @@ public class HistogramMatcher extends BaseMatcher {
 	 * 実行
 	 */
 	public Map<String, Map<String, Double>> run() {
+		clearResult();
 		startTimeWatch();
-		if (this.images.isEmpty()) {
+		if (images.isEmpty()) {
 			endTimeWatch();
 			return null;
 		}
 		List<CvHistogram> hists = createHistogram();
-		Map<String, Map<String, Double>> group = new HashMap<String, Map<String, Double>>();
-		Map<String, Boolean> skip              = new HashMap<String, Boolean>();
+		Map<String, Boolean> skip = new HashMap<String, Boolean>();
 		int len = hists.size();
 		for (int i = 0; i < len; i++) {
-			String name = this.images.get(i);
-			group.put(name, new HashMap<String, Double>());
-			group.get(name).put(name, getCompareHistValue(hists.get(i), hists.get(i), this.compareType));
+			String name = images.get(i);
+			result.put(name, new HashMap<String, Double>());
+			result.get(name).put(name, getCompareHistValue(hists.get(i), hists.get(i), compareType));
 			if (skip.containsKey(name)) {
 				continue;
 			}
 			for (int j = i + 1; j < len; j++) {
-				String bName = this.images.get(j);
-				double histValue = getCompareHistValue(hists.get(i), hists.get(j), this.compareType);
+				String bName = images.get(j);
+				double histValue = getCompareHistValue(hists.get(i), hists.get(j), compareType);
 				if (allowableRange(histValue)) {
-					group.get(name).put(bName, histValue);
+					result.get(name).put(bName, histValue);
 					skip.put(bName, true);
 				}
 			}
 		}
 		endTimeWatch();
-		return group;
+		return result;
 	}
-
 
 	/**
 	 * ヒストグラムの作成
@@ -157,6 +156,13 @@ public class HistogramMatcher extends BaseMatcher {
 		return hists;
 	}
 
+	/**
+	 * ヒストグラムの比較
+	 * @param hist1
+	 * @param hist2
+	 * @param cvComp
+	 * @return
+	 */
 	private double getCompareHistValue(CvHistogram hist1, CvHistogram hist2, int cvComp) {
 		return cvCompareHist(hist1, hist2, cvComp);
 	}

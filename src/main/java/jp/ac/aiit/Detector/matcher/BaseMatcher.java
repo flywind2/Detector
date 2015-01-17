@@ -1,11 +1,16 @@
 package jp.ac.aiit.Detector.matcher;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public abstract class BaseMatcher {
 
+	/**
+	 * 処理の結果
+	 */
+	protected Map<String, Map<String, Double>> result;
 	protected List<String> images;
 	private long startTime = 0;
 	private long endTime   = 0;
@@ -14,7 +19,8 @@ public abstract class BaseMatcher {
 	 * Constructor
 	 */
 	public BaseMatcher() {
-		this.images = new ArrayList<String>();
+		images = new ArrayList<String>();
+		result = new HashMap<String, Map<String, Double>>();
 	}
 
 	/**
@@ -35,19 +41,49 @@ public abstract class BaseMatcher {
 		}
 	}
 
+	/**
+	 * 結果をクリアする.
+	 */
+	public void clearResult() {
+		if (!result.isEmpty()) {
+			result.clear();
+		}
+	}
+
+	/**
+	 * 出力結果の取得
+	 * @return result
+	 */
+	public Map<String, Map<String, Double>> getResult() {
+		return result;
+	}
+
+	/**
+	 * 処理時間を取得する
+	 * @return long
+	 */
 	public long getProcessingTime() {
 		return endTime - startTime;
 	}
 
+	/**
+	 * タイマーウォッチをリセット
+	 */
 	public void resetTimeWatch() {
 		startTime = 0;
 		endTime   = 0;
 	}
 
+	/**
+	 * タイムウォッチ開始
+	 */
 	protected void startTimeWatch() {
 		startTime = System.currentTimeMillis();
 	}
 
+	/**
+	 * タイムウォッチ終了
+	 */
 	protected void endTimeWatch() {
 		endTime = System.currentTimeMillis();
 	}
@@ -67,6 +103,10 @@ public abstract class BaseMatcher {
 		this.images = images;
 	}
 
+	/**
+	 * 実行
+	 * @return result
+	 */
 	abstract  Map<String, Map<String, Double>> run();
 
 }
