@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jp.ac.aiit.Detector.DetectorResult;
 import jp.ac.aiit.Detector.util.Tool;
 import net.semanticmetadata.lire.DocumentBuilder;
 import net.semanticmetadata.lire.ImageSearchHits;
@@ -29,12 +30,12 @@ public class LireDemo {
 	// 画像違い度（0になたら、完全に類似）
 	public int DIFF_LEVEL = 15;
 		
-	public Map<String, Map<String, Double>> search() throws IOException {
+	public DetectorResult search() throws IOException {
 
 		TARGET_DIR = Tool.getResourcePath("/image");
 		INDEX_PATH = Tool.getResourcePath("/index");
 
-		Map<String, Map<String, Double>> ret = new HashMap<>();
+		DetectorResult ret = new DetectorResult();
 
         // 処理開始時間を取得します
         //long startTime = System.currentTimeMillis();
@@ -78,14 +79,12 @@ public class LireDemo {
 					biImg = DetectorUtil.loadImage(obj);	
 					hits = searcher.search(biImg, reader);
 
-					Map<String, Double> temp = new HashMap<>();
-					ret.put(obj.getName(), temp);
 					for (int i = 0; i < hits.length(); i++) {
 						// 類似度より抽出する
 						if (hits.score(i) <= DIFF_LEVEL) {
 							String filepath = hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue();
 							fileNameList.remove((new File(filepath)).getName());
-							temp.put((new File(filepath)).getName(), (double)hits.score(i));
+							ret.put(obj.getName(), (new File(filepath)).getName(), (double)hits.score(i));
 						}
 					}
 					count++;	
