@@ -156,7 +156,6 @@ public class AutoTimeTest {
             }
         }
 
-        debug(imageFolderMap.toString());
         int count = 0;
         int valid = 0;
 

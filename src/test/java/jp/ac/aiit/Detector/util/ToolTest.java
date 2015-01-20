@@ -5,6 +5,7 @@ import org.junit.Test;
 import java.io.File;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class ToolTest {
 
@@ -20,7 +21,7 @@ public class ToolTest {
     @Test
     public void testGetResoucePathFileCount() throws Exception {
         File[] ret = Tool.getResourcePathFileList("test");
-        assertEquals(null, ret);
+        assertNull(ret);
 
         File[] ret1 = Tool.getResourcePathFileList("/aaa.txt");
         assertEquals(1, ret1.length); //fileの場合は1

@@ -56,4 +56,12 @@ public class DetectorResult {
     public String toString() {
         return toMap().toString();
     }
+
+    public boolean isEmpty() {
+        return data.isEmpty();
+    }
+
+    public void clear() {
+        data.clear();
+    }
 }

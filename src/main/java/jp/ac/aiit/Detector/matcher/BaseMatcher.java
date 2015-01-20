@@ -1,5 +1,7 @@
 package jp.ac.aiit.Detector.matcher;
 
+import jp.ac.aiit.Detector.DetectorResult;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +12,7 @@ public abstract class BaseMatcher {
 	/**
 	 * 処理の結果
 	 */
-	protected Map<String, Map<String, Double>> result;
+	protected DetectorResult result;
 	protected List<String> images;
 	private long startTime = 0;
 	private long endTime   = 0;
@@ -20,7 +22,7 @@ public abstract class BaseMatcher {
 	 */
 	public BaseMatcher() {
 		images = new ArrayList<String>();
-		result = new HashMap<String, Map<String, Double>>();
+		result = new DetectorResult();
 	}
 
 	/**
@@ -54,7 +56,7 @@ public abstract class BaseMatcher {
 	 * 出力結果の取得
 	 * @return result
 	 */
-	public Map<String, Map<String, Double>> getResult() {
+	public DetectorResult getResult() {
 		return result;
 	}
 
@@ -107,6 +109,6 @@ public abstract class BaseMatcher {
 	 * 実行
 	 * @return result
 	 */
-	abstract  Map<String, Map<String, Double>> run();
+	abstract  DetectorResult run();
 
 }

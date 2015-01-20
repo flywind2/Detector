@@ -1,5 +1,6 @@
 package jp.ac.aiit.Detector.matcher;
 
+import jp.ac.aiit.Detector.DetectorResult;
 import org.bytedeco.javacpp.*;
 
 import java.util.*;
@@ -68,7 +69,7 @@ public class HistogramMatcher extends BaseMatcher {
 	/**
 	 * 実行
 	 */
-	public Map<String, Map<String, Double>> run() {
+	public DetectorResult run() {
 		clearResult();
 		startTimeWatch();
 		if (images.isEmpty()) {
@@ -80,8 +81,9 @@ public class HistogramMatcher extends BaseMatcher {
 		int len = hists.size();
 		for (int i = 0; i < len; i++) {
 			String name = images.get(i);
-			result.put(name, new HashMap<String, Double>());
-			result.get(name).put(name, getCompareHistValue(hists.get(i), hists.get(i), compareType));
+			//result.put(name, new HashMap<String, Double>());
+			result.put(name, name, getCompareHistValue(hists.get(i), hists.get(i), compareType));
+			//result.get(name).put(name, getCompareHistValue(hists.get(i), hists.get(i), compareType));
 			if (skip.containsKey(name)) {
 				continue;
 			}
@@ -89,7 +91,8 @@ public class HistogramMatcher extends BaseMatcher {
 				String bName = images.get(j);
 				double histValue = getCompareHistValue(hists.get(i), hists.get(j), compareType);
 				if (allowableRange(histValue)) {
-					result.get(name).put(bName, histValue);
+					result.put(name, bName, histValue);
+					//result.get(name).put(bName, histValue);
 					skip.put(bName, true);
 				}
 			}
