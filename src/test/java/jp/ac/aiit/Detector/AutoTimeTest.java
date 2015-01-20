@@ -8,6 +8,7 @@ import com.google.gdata.client.spreadsheet.SpreadsheetService;
 import com.google.gdata.client.spreadsheet.WorksheetQuery;
 import com.google.gdata.data.spreadsheet.*;
 import com.google.gdata.util.AuthenticationException;
+import jp.ac.aiit.Detector.matcher.HistogramMatcher;
 import jp.ac.aiit.Detector.util.Tool;
 import jp.ac.aiit.DetectorLire.LireDemo;
 import org.junit.Test;
@@ -18,6 +19,7 @@ import java.net.URL;
 import java.util.*;
 
 import static jp.ac.aiit.Detector.util.Debug.debug;
+import static org.bytedeco.javacpp.opencv_highgui.CV_LOAD_IMAGE_COLOR;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -120,14 +122,22 @@ public class AutoTimeTest {
     private Map<String, String> runDetector() throws Exception {
         Map<String, String> ret = new HashMap<>();
         Stopwatch sw = Stopwatch.createUnstarted();
-        sw.start();
         //処理時間計測
-        //
+        HistogramMatcher hm = new HistogramMatcher();
+        File[] files = Tool.getResourcePathFileList("/image");
+        hm.setImageColorType(CV_LOAD_IMAGE_COLOR);
+        for (File file: files) {
+            String fileName = file.getAbsolutePath();
+            hm.addImage(fileName);
+        }
+        sw.start();
+        DetectorResult result = hm.run();
         sw.stop();
         ret.put("tm", sw.toString());
 
         //認識率計測
-        String rate = "test";
+        debug(result.toString());
+        String rate = calcRate(result);
         ret.put("rate", rate);
 
         return ret;
@@ -147,12 +157,12 @@ public class AutoTimeTest {
 
             if (name.indexOf("d") == 0) {
                 //dなら一人グループ
-                imageFolderMap.put(name, name, 1.0);
+                imageFolderMap.put(f.getAbsolutePath(), f.getAbsolutePath(), 1.0);
             } else if (name.indexOf("p") == 0) {
                 //pならグループわけ
                 //pxxx_01.jpg
-                String pxxx_01 = name.split("_")[0] + "_01" + name.substring(name.lastIndexOf("."));
-                imageFolderMap.put(pxxx_01, name, 1.0);
+                String pxxx_01 = f.getParent() + name.split("_")[0] + "_01" + name.substring(name.lastIndexOf("."));
+                imageFolderMap.put(pxxx_01, f.getAbsolutePath(), 1.0);
             }
         }
 

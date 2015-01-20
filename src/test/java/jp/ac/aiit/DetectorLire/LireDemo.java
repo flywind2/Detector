@@ -84,7 +84,7 @@ public class LireDemo {
 						if (hits.score(i) <= DIFF_LEVEL) {
 							String filepath = hits.doc(i).getField(DocumentBuilder.FIELD_NAME_IDENTIFIER).stringValue();
 							fileNameList.remove((new File(filepath)).getName());
-							ret.put(obj.getName(), (new File(filepath)).getName(), (double)hits.score(i));
+							ret.put(obj.getAbsolutePath(), (new File(filepath)).getAbsolutePath(), (double)hits.score(i));
 						}
 					}
 					count++;	
