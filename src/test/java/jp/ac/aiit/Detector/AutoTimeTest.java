@@ -136,7 +136,6 @@ public class AutoTimeTest {
         ret.put("tm", sw.toString());
 
         //認識率計測
-        debug(result.toString());
         String rate = calcRate(result);
         ret.put("rate", rate);
 
