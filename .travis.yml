@@ -12,6 +12,15 @@ before_install:
   - "sudo apt-get install libv4l-dev"
   - "export GIT_MESSAGE=`git log -1`"
 
+script:
+  - "./gradlew compileJava"
+  - "./gradlew processResources"
+  - "./gradlew classes"
+  - "./gradlew compileTestJava"
+  - "./gradlew processTestResources"
+  - "./gradlew testClasses"
+  - "./gradlew test --info"
+
 after_failure:
-  - ./gradlew test --info
+#  - ./gradlew test --info
 #  - "cat $TRAVIS_BUILD_DIR/log.log"
