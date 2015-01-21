@@ -13,7 +13,7 @@ before_install:
   - "export GIT_MESSAGE=`git log -1`"
 
 script:
-  - "./gradlew test --info"
+  - "./gradlew test --debug"
 
 after_failure:
 #  - ./gradlew test --info

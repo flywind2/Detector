@@ -1,8 +1,7 @@
 package jp.ac.aiit.Detector;
 
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 画像認識処理の結果を格納するクラス
@@ -63,5 +62,39 @@ public class DetectorResult {
 
     public void clear() {
         data.clear();
+    }
+
+    /**
+     * HashMap型のデータを見やすい形にする
+     *
+     * @return
+     */
+    public String pPrintString() {
+        String br = System.getProperty("line.separator");
+        StringBuilder sb = new StringBuilder();
+
+        SortedSet<String> keys = new TreeSet<>(data.keySet());
+        sb.append("{");
+        for (String key: keys) {
+            sb.append(br);
+            sb.append("  " + key);
+            sb.append("=");
+            SortedSet<String> innerKeys = new TreeSet<>(data.get(key).keySet());
+            sb.append(br);
+            sb.append("  {");
+            for (String innerKey: innerKeys) {
+                sb.append(br);
+                sb.append("    " + innerKey);
+                sb.append("=");
+                sb.append(data.get(key).get(innerKey));
+                sb.append(", ");
+            }
+            sb.append(br);
+            sb.append("  }");
+            sb.append(", ");
+        }
+        sb.append(br);
+        sb.append("}");
+        return sb.toString();
     }
 }

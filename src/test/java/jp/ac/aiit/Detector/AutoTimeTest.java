@@ -126,6 +126,7 @@ public class AutoTimeTest {
         HistogramMatcher hm = new HistogramMatcher();
         File[] files = Tool.getResourcePathFileList("/image");
         hm.setImageColorType(CV_LOAD_IMAGE_COLOR);
+        hm.setAllowableValue(0.9);
         for (File file: files) {
             String fileName = file.getAbsolutePath();
             hm.addImage(fileName);
@@ -139,6 +140,7 @@ public class AutoTimeTest {
         String rate = calcRate(result);
         ret.put("rate", rate);
 
+        debug(result.pPrintString());
         return ret;
     }
 
