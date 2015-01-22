@@ -72,7 +72,7 @@ public class LireDemo {
 			
 		    try {
 				reader = IndexReader.open(FSDirectory.open(new File(INDEX_PATH)));
-				searcher = ImageSearcherFactory.createCEDDImageSearcher(50);
+				searcher = ImageSearcherFactory.createCEDDImageSearcher(1000);
 				
 				while(fileNameList.size() > 0) {
 					File obj = (File)fileMap.get(fileNameList.get(0));

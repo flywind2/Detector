@@ -14,7 +14,7 @@ public class HistogramTest {
 
 	@Test
 	public void grayScaleRun() {
-		File[] files = Tool.getResourcePathFileList("/image");
+		File[] files = Tool.getResourcePathFileList("/test_image");
 		HistogramMatcher hm = new HistogramMatcher();
 		hm.setImageColorType(CV_LOAD_IMAGE_GRAYSCALE);
 		for (File file: files) {
@@ -28,7 +28,7 @@ public class HistogramTest {
 
 	@Test
 	public void colorRun() {
-		File[] files = Tool.getResourcePathFileList("/image");
+		File[] files = Tool.getResourcePathFileList("/test_image");
 		HistogramMatcher hm = new HistogramMatcher();
 		hm.setImageColorType(CV_LOAD_IMAGE_COLOR);
 		for (File file: files) {

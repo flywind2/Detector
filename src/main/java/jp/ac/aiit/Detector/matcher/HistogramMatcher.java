@@ -1,6 +1,7 @@
 package jp.ac.aiit.Detector.matcher;
 
 import jp.ac.aiit.Detector.DetectorResult;
+import jp.ac.aiit.Detector.util.Debug;
 import org.bytedeco.javacpp.*;
 
 import java.util.*;

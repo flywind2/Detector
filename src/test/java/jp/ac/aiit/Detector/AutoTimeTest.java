@@ -40,8 +40,13 @@ public class AutoTimeTest {
         File[] files = Tool.getResourcePathFileList("/image");
         int count = files.length;
         //実行時間取得
-        Map<String, String> retLire = runLire();
+        debug("Lire start");
+        Map<String, String> retLire = new HashMap<>();
+        retLire = runLire();
+        debug("Lire end");
+        debug("Detector start");
         Map<String, String> retDetector = runDetector();
+        debug("Detector end");
 
         //環境変数からAPIキーとGITメッセージを取得
         //取得不可の場合はコンソールログ出力する
@@ -140,7 +145,7 @@ public class AutoTimeTest {
         String rate = calcRate(result);
         ret.put("rate", rate);
 
-        debug(result.pPrintString());
+        //debug(result.pPrintString());
         return ret;
     }
 
