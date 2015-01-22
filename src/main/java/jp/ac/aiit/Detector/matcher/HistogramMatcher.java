@@ -155,6 +155,12 @@ public class HistogramMatcher extends BaseMatcher {
 				cvCalcHist(dst.get(k), hist);
 				cvNormalizeHist(hist, 1.0);
 			}
+
+			//IplImageの解放(メモリリーク対策)
+			cvReleaseImage(img);
+			for (IplImage ii: dst) {
+				cvReleaseImage(ii);
+			}
 			hists.add(hist);
 		}
 		return hists;
