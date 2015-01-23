@@ -130,6 +130,9 @@ public class HistogramMatcher extends BaseMatcher {
 			cvCalcHist(dst, hist);
 			cvNormalizeHist(hist, 1.0);
 			hists.add(hist);
+
+			cvReleaseImage(img);
+			cvReleaseImage(dst);
 		}
 		return hists;
 	}
