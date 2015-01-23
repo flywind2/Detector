@@ -72,9 +72,7 @@ public class HistogramMatcher extends BaseMatcher {
 	 */
 	public DetectorResult run() {
 		clearResult();
-		startTimeWatch();
 		if (images.isEmpty()) {
-			endTimeWatch();
 			return null;
 		}
 		List<CvHistogram> hists = createHistogram();
@@ -82,23 +80,44 @@ public class HistogramMatcher extends BaseMatcher {
 		int len = hists.size();
 		for (int i = 0; i < len; i++) {
 			String name = images.get(i);
-			//result.put(name, new HashMap<String, Double>());
-			result.put(name, name, getCompareHistValue(hists.get(i), hists.get(i), compareType));
-			//result.get(name).put(name, getCompareHistValue(hists.get(i), hists.get(i), compareType));
 			if (skip.containsKey(name)) {
 				continue;
 			}
+			result.put(name, name, getCompareHistValue(hists.get(i), hists.get(i), compareType));
 			for (int j = i + 1; j < len; j++) {
 				String bName = images.get(j);
 				double histValue = getCompareHistValue(hists.get(i), hists.get(j), compareType);
 				if (allowableRange(histValue)) {
 					result.put(name, bName, histValue);
-					//result.get(name).put(bName, histValue);
 					skip.put(bName, true);
 				}
 			}
 		}
-		endTimeWatch();
+		return result;
+	}
+
+	/**
+	 * 指定された画像全ての組み合わせで一致率を返却する。
+	 * 処理時間が長いので実行の際は注意をする事。
+	 *
+	 * @return
+	 */
+	public DetectorResult fullScan() {
+		clearResult();
+		if (images.isEmpty()) {
+			return null;
+		}
+		List<CvHistogram> hists = createHistogram();
+		int len = hists.size();
+		for (int i = 0; i < len; i++) {
+			String name = images.get(i);
+			result.put(name, name, getCompareHistValue(hists.get(i), hists.get(i), compareType));
+			for (int j = 0; j < len; j++) {
+				String bName = images.get(j);
+				double histValue = getCompareHistValue(hists.get(i), hists.get(j), compareType);
+				result.put(name, bName, histValue);
+			}
+		}
 		return result;
 	}
 
