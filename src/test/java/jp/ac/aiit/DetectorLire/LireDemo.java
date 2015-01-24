@@ -28,7 +28,7 @@ public class LireDemo {
 	private String INDEX_PATH;
 	
 	// 画像違い度（0になたら、完全に類似）
-	public int DIFF_LEVEL = 10;
+	public int DIFF_LEVEL = 5;
 		
 	public DetectorResult search() throws IOException {
 
