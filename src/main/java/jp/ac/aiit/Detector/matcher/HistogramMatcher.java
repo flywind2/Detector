@@ -1,5 +1,6 @@
 package jp.ac.aiit.Detector.matcher;
 
+import com.google.common.collect.Lists;
 import jp.ac.aiit.Detector.DetectorResult;
 import jp.ac.aiit.Detector.util.Debug;
 import org.bytedeco.javacpp.*;
@@ -75,7 +76,7 @@ public class HistogramMatcher extends BaseMatcher {
 		if (images.isEmpty()) {
 			return null;
 		}
-		List<CvHistogram> hists = createHistogram();
+		Map<String, CvHistogram> hists = createHistogram();
 		Map<String, Boolean> skip = new HashMap<String, Boolean>();
 		int len = hists.size();
 		for (int i = 0; i < len; i++) {
@@ -83,10 +84,10 @@ public class HistogramMatcher extends BaseMatcher {
 			if (skip.containsKey(name)) {
 				continue;
 			}
-			result.put(name, name, getCompareHistValue(hists.get(i), hists.get(i), compareType));
+			result.put(name, name, getCompareHistValue(hists.get(name), hists.get(name), compareType));
 			for (int j = i + 1; j < len; j++) {
 				String bName = images.get(j);
-				double histValue = getCompareHistValue(hists.get(i), hists.get(j), compareType);
+				double histValue = getCompareHistValue(hists.get(name), hists.get(bName), compareType);
 				if (allowableRange(histValue)) {
 					result.put(name, bName, histValue);
 					skip.put(bName, true);
@@ -107,14 +108,14 @@ public class HistogramMatcher extends BaseMatcher {
 		if (images.isEmpty()) {
 			return null;
 		}
-		List<CvHistogram> hists = createHistogram();
+		Map<String, CvHistogram> hists = createHistogram();
 		int len = hists.size();
 		for (int i = 0; i < len; i++) {
 			String name = images.get(i);
-			result.put(name, name, getCompareHistValue(hists.get(i), hists.get(i), compareType));
+			result.put(name, name, getCompareHistValue(hists.get(name), hists.get(name), compareType));
 			for (int j = 0; j < len; j++) {
 				String bName = images.get(j);
-				double histValue = getCompareHistValue(hists.get(i), hists.get(j), compareType);
+				double histValue = getCompareHistValue(hists.get(name), hists.get(bName), compareType);
 				result.put(name, bName, histValue);
 			}
 		}
@@ -125,7 +126,7 @@ public class HistogramMatcher extends BaseMatcher {
 	 * ヒストグラムの作成
 	 * @return List<CvHistogram>
 	 */
-	public List<CvHistogram> createHistogram() {
+	public Map<String, CvHistogram> createHistogram() {
 		if (this.imageColorType == CV_LOAD_IMAGE_GRAYSCALE) {
 			return createGrayScaleHistogram();
 		}
@@ -137,8 +138,8 @@ public class HistogramMatcher extends BaseMatcher {
 	 * グレイスケールのヒストグラムを生成する.
 	 * @return List<CvHistogram>
 	 */
-	private List<CvHistogram> createGrayScaleHistogram() {
-		List<CvHistogram> hists = new ArrayList<CvHistogram>();
+	private Map<String, CvHistogram> createGrayScaleHistogram() {
+		Map<String, CvHistogram> hists = new HashMap<>();
 		for (int i = 0; i < images.size(); i++) {
 			IplImage img = cvLoadImage(images.get(i), CV_LOAD_IMAGE_GRAYSCALE);
 			IplImage dst = cvCreateImage(cvSize(img.width(), img.height()), img.depth(), 1);
@@ -148,7 +149,7 @@ public class HistogramMatcher extends BaseMatcher {
 			cvCopy(img, dst);
 			cvCalcHist(dst, hist);
 			cvNormalizeHist(hist, 1.0);
-			hists.add(hist);
+			hists.put(images.get(i), hist);
 
 			cvReleaseImage(img);
 			cvReleaseImage(dst);
@@ -161,8 +162,30 @@ public class HistogramMatcher extends BaseMatcher {
 	 * RGBのヒストグラムを生成する.
 	 * @return List<CvHistogram>
 	 */
-	private List<CvHistogram> createColorHistogram() {
-		List<CvHistogram> hists = new ArrayList<CvHistogram>();
+	private Map<String, CvHistogram> createColorHistogram() {
+		Map<String, CvHistogram> hists = new HashMap<>();
+
+		List<List<String>> dividedImages = Lists.partition(images, 100);
+		List<Thread> threads = new ArrayList<>();
+		for (List<String> img: dividedImages) {
+			CreateHistogram create = new CreateHistogram();
+			create.setTargetMap(hists);
+			create.setTargetImages(img);
+			Thread t = new Thread(create);
+			t.start();
+			threads.add(t);
+		}
+
+		for (Thread t: threads) {
+			try {
+				t.join();
+			} catch (InterruptedException e) {
+				Debug.debug(e.toString());
+			}
+		}
+
+
+		/*
 		for (int i = 0; i < images.size(); i++) {
 			IplImage img       = cvLoadImage(images.get(i), CV_LOAD_IMAGE_COLOR);
 			List<IplImage> dst = new ArrayList<IplImage>();
@@ -183,8 +206,9 @@ public class HistogramMatcher extends BaseMatcher {
 			for (IplImage ii: dst) {
 				cvReleaseImage(ii);
 			}
-			hists.add(hist);
+			hists.put(images.get(i), hist);
 		}
+		*/
 		return hists;
 	}
 
@@ -216,4 +240,43 @@ public class HistogramMatcher extends BaseMatcher {
 		return histValue < allowableValue;
 	}
 
+	public class CreateHistogram implements Runnable {
+		private Map<String, CvHistogram> targetMap;
+
+		private List<String> targetImages;
+
+		public void setTargetMap(Map<String, CvHistogram> targetMap) {
+			this.targetMap = targetMap;
+		}
+
+		public void setTargetImages(List<String> targetImages) {
+			this.targetImages = targetImages;
+		}
+
+		public void run() {
+			for (String image: targetImages) {
+				IplImage img       = cvLoadImage(image, CV_LOAD_IMAGE_COLOR);
+				List<IplImage> dst = new ArrayList<IplImage>();
+				for (int j = 0; j < img.nChannels(); j++) {
+					dst.add(cvCreateImage(cvSize(img.width(), img.height()), img.depth(), 1));
+				}
+				FloatPointer ranges = new FloatPointer(0.0f, 256.0f);
+				IntPointer histSize = new IntPointer(255, 255);
+				CvHistogram hist = cvCreateHist(1, histSize, CV_HIST_ARRAY, ranges, 1);
+				cvSplit(img, dst.get(0), dst.get(1), dst.get(2), null);
+				for (int k = 0; k < img.nChannels(); k++) {
+					cvCalcHist(dst.get(k), hist);
+					cvNormalizeHist(hist, 1.0);
+				}
+
+				//IplImageの解放(メモリリーク対策)
+				cvReleaseImage(img);
+				for (IplImage ii: dst) {
+					cvReleaseImage(ii);
+				}
+				targetMap.put(image, hist);
+			}
+		}
+	}
 }
+
