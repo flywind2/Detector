@@ -7,7 +7,7 @@ sourceCompatibility = 1.7
 version = '1.0'
 def flgMacOs64 = false
 
-group = 'jp.ac.aiit'
+group = 'com.github.pbl2014'
 archivesBaseName = 'Detector'
 
 ext {
