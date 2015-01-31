@@ -53,7 +53,7 @@ artifacts {
 uploadArchives {
     repositories {
         mavenDeployer {
-            repository(url: 'file:build/dist')
+            repository(url: 'file:dist')
         }
     }
 }
@@ -82,3 +82,5 @@ dependencies {
         compile group: 'org.bytedeco.javacpp-presets', name: 'opencv', version: '2.4.9-0.9', classifier: opencvBinaryClassifer
     }
 }
+
+
