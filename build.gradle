@@ -1,10 +1,14 @@
 import org.apache.tools.ant.taskdefs.condition.Os;
 
 apply plugin: 'java'
+apply plugin: 'maven'
 
 sourceCompatibility = 1.7
 version = '1.0'
 def flgMacOs64 = false
+
+group = 'jp.ac.aiit'
+archivesBaseName = 'Detector'
 
 ext {
 
@@ -29,6 +33,29 @@ ext {
 
     opencvBinaryClassifer = os+'-'+arch;
 
+}
+
+task javadocJar(type: Jar, dependsOn:javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+task sourcesJar(type: Jar, dependsOn:classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: 'file:build/dist')
+        }
+    }
 }
 
 repositories {
