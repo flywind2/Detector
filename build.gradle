@@ -55,11 +55,33 @@ uploadArchives {
         mavenDeployer {
             repository(url: 'file:dist')
             pom.project {
+                name 'Detector'
+                description 'Detector is a library for picking up similarity pictures with fast speed.'
+                url 'https://github.com/pbl2014/Detector/'
                 licenses {
                     license {
                         name '3-clause BSD License'
                         url 'http://pbl2014.github.io/detector-site/document/license.html'
                         distribution 'repo'
+                    }
+                }
+                scm {
+                    url 'http://pbl2014.github.io/detector-site'
+                    connection 'scm:git:git://github.com/pbl2014/Detector.git'
+                    developerConnection 'scm:git:git://github.com/pbl2014/Detector.git'
+                }
+                developers {
+                    developer {
+                        id 'koyamapbl2014'
+                        name 'koyamapbl2014'
+                        email 'kakuhrf@gmail.com'
+                        url 'http://pbl2014.github.io/detector-site'
+                        roles {
+                            role 'lead'
+                            role 'architect'
+                            role 'developer'
+                        }
+                        timezone '-9'
                     }
                 }
             }

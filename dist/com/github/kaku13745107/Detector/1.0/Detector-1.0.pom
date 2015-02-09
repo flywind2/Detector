@@ -5,6 +5,35 @@
   <groupId>com.github.kaku13745107</groupId>
   <artifactId>Detector</artifactId>
   <version>1.0</version>
+  <name>Detector</name>
+  <description>Detector is a library for picking up similarity pictures with fast speed.</description>
+  <url>https://github.com/pbl2014/Detector/</url>
+  <licenses>
+    <license>
+      <name>3-clause BSD License</name>
+      <url>http://pbl2014.github.io/detector-site/document/license.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>koyamapbl2014</id>
+      <name>koyamapbl2014</name>
+      <email>kakuhrf@gmail.com</email>
+      <url>http://pbl2014.github.io/detector-site</url>
+      <roles>
+        <role>lead</role>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+      <timezone>-9</timezone>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:git://github.com/pbl2014/Detector.git</connection>
+    <developerConnection>scm:git:git://github.com/pbl2014/Detector.git</developerConnection>
+    <url>http://pbl2014.github.io/detector-site</url>
+  </scm>
   <dependencies>
     <dependency>
       <groupId>org.bytedeco.javacpp-presets</groupId>
