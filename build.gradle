@@ -54,6 +54,15 @@ uploadArchives {
     repositories {
         mavenDeployer {
             repository(url: 'file:dist')
+            pom.project {
+                licenses {
+                    license {
+                        name '3-clause BSD License'
+                        url 'http://pbl2014.github.io/detector-site/document/license.html'
+                        distribution 'repo'
+                    }
+                }
+            }
         }
     }
 }
